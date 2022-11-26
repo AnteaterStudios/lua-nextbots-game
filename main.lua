@@ -1,4 +1,3 @@
-local hello
 local sky
 local nb_tex
 local nb_mat
@@ -9,6 +8,8 @@ local headset_ay
 local headset_az
 local nb_pos
 local nb_vel = 3
+
+-- lol
 
 function lovr.load()
   sky = lovr.graphics.newTexture("sky.jpg")
