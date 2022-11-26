@@ -21,7 +21,8 @@ function lovr.update(dt)
   headset_angle, headset_ax, headset_ay, headset_az = lovr.headset.getOrientation()
 
   local distance = nb_pos:distance(headset_pos)
-  nb_pos = nb_pos:lerp(headset_pos, (nb_vel / distance) * dt)
+  local nb_pos_tmp = nb_pos:lerp(headset_pos, (nb_vel / distance) * dt)
+  nb_pos = lovr.math.newVec3(nb_pos_tmp.x, 0, nb_pos_tmp.z)
 end
 
 function lovr.draw()
