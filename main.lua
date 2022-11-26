@@ -13,6 +13,8 @@ local headset_ay
 local headset_az
 local nb_pos
 
+-- baller
+
 function lovr.load()
   sky = lovr.graphics.newTexture("sky.jpg")
   nb_tex = lovr.graphics.newTexture('obunga.png', { mipmaps = false })
