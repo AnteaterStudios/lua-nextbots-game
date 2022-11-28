@@ -15,6 +15,8 @@ local headset_ay
 local headset_az
 local wood_tex
 
+local plr = require("player.lua")
+
 --[[--
 / dsound = death sound (when you die it will happen this soundtrack)
 #---------
@@ -57,6 +59,8 @@ function lovr.update(dt)
   headset_pos = lovr.math.newVec3(lovr.headset.getPosition())
   headset_angle, headset_ax, headset_ay, headset_az = lovr.headset.getOrientation()
 
+  plr.updFunc(dt)
+
   for k, v in pairs(nextbots) do
     local distance = v.pos:distance(headset_pos)
     local nb_pos_tmp = v.pos:lerp(headset_pos, (v.vel / distance) * dt)
@@ -73,6 +77,8 @@ end
 
 function lovr.draw(pass)
   lovr.graphics.skybox(sky)
+
+  plr.drwFunc(pass)
 
   for k, v in pairs(nextbots) do
     local x, y, z = v.pos:unpack()
