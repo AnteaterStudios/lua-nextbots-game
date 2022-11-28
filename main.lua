@@ -3,6 +3,9 @@ local NB_SIZE = 2.5
 local RANDOM_POS_MAX = 50
 local DOOR_SIZE_X = 2
 local DOOR_SIZE_Y = 3
+local JUMP_CHANCE = 0.05 -- chance of jumping each second (value between 0 and 1)
+local JUMP_MAXHEIGHT = 3
+local JUMP_DURATION = 1
 
 local SOUND_CHANCE = {min = 1, max = 6}
 
@@ -15,7 +18,7 @@ local headset_ay
 local headset_az
 local wood_tex
 
-local plr = require("player.lua")
+--local plr = require("player.lua")
 
 --[[--
 / dsound = death sound (when you die it will happen this soundtrack)
@@ -32,15 +35,19 @@ local doors = {
 }
 
 local nextbots = {
-  ['obunga'] = {image = "nextbots/obunga/obunga.jpg", sound = "", dsound = "", vel = 4, pos = lovr.math.newVec3(0, NB_SIZE / 2, 0), tex = nil, mat = nil, sLoop = false},
-  ['baller'] = {image = "nextbots/baller/baller.jpeg", sound = "", dsound = "", vel = 6, pos = lovr.math.newVec3(0, NB_SIZE / 2, 0), tex = nil, mat = nil, sLoop = true},
-  ['rock'] = {image = "nextbots/rock/rock.jpeg", sound = "nextbots/rock/death.mp3", dsound = "nextbots/rock/death.mp3", vel = 5, pos = lovr.math.newVec3(0, NB_SIZE / 2, 0), tex = nil, mat = nil, sLoop = false},
-  ['spongebob'] = {image = "nextbots/bob/bob.jpeg", sound = "", dsound = "", vel = 5.5, pos = lovr.math.newVec3(0, NB_SIZE / 2, 0), tex = nil, mat = nil, sLoop = false}
+  ['obunga'] = {image = "nextbots/obunga/obunga.jpg", sound = "", dsound = "", vel = 4, pos = lovr.math.newVec3(0, NB_SIZE / 2, 0), tex = nil, mat = nil, sLoop = false, timeJumping = -1},
+  ['baller'] = {image = "nextbots/baller/baller.jpeg", sound = "", dsound = "", vel = 6, pos = lovr.math.newVec3(0, NB_SIZE / 2, 0), tex = nil, mat = nil, sLoop = true, timeJumping = -1},
+  ['rock'] = {image = "nextbots/rock/rock.jpeg", sound = "nextbots/rock/death.mp3", dsound = "nextbots/rock/death.mp3", vel = 5, pos = lovr.math.newVec3(0, NB_SIZE / 2, 0), tex = nil, mat = nil, sLoop = false, timeJumping = -1},
+  ['spongebob'] = {image = "nextbots/bob/bob.jpeg", sound = "", dsound = "", vel = 5.5, pos = lovr.math.newVec3(0, NB_SIZE / 2, 0), tex = nil, mat = nil, sLoop = false, timeJumping = -1}
 }
+
+local function nbJump(duration, max_height, time)
+  return (4*max_height*time*(duration-time))/(duration^2)
+end
 
 function lovr.load()
   sky = lovr.graphics.newTexture("sky.jpg", {})
-  wood_tex = lovr.graphics.newMaterial(lovr.graphics.newTexture("materials/wood.jpeg"))
+  wood_tex = lovr.graphics.newMaterial(lovr.graphics.newTexture("materials/wood.jpeg", {}))
 
   for k, v in pairs(nextbots) do
     v.tex = lovr.graphics.newTexture(v.image, {})
@@ -59,14 +66,28 @@ function lovr.update(dt)
   headset_pos = lovr.math.newVec3(lovr.headset.getPosition())
   headset_angle, headset_ax, headset_ay, headset_az = lovr.headset.getOrientation()
 
-  plr.updFunc(dt)
+  --plr.updFunc(dt)
 
   for k, v in pairs(nextbots) do
     local distance = v.pos:distance(headset_pos)
     local nb_pos_tmp = v.pos:lerp(headset_pos, (v.vel / distance) * dt)
     v.pos = lovr.math.newVec3(nb_pos_tmp.x, NB_SIZE / 2, nb_pos_tmp.z)
+    local x, y, z = v.pos:unpack()
+    if v.timeJumping < 0 then
+      local jumpChance = dt * JUMP_CHANCE
+      local rnd = lovr.math.random()
+      if rnd <= jumpChance then
+        v.timeJumping = 0
+      end
+    elseif v.timeJumping >= 0 and v.timeJumping < JUMP_DURATION then
+      local jump = nbJump(JUMP_DURATION, JUMP_MAXHEIGHT, v.timeJumping)
+      v.pos = lovr.math.newVec3(x, y + jump, z)
+      v.timeJumping = v.timeJumping + dt
+    else
+      v.timeJumping = -1
+    end
   end
-  
+
   for i = 1, #doors, 1 do
     local dist = doors[i].pos:distance(headset_pos)
     if dist <= 1.5 then
@@ -78,7 +99,7 @@ end
 function lovr.draw(pass)
   lovr.graphics.skybox(sky)
 
-  plr.drwFunc(pass)
+  --plr.drwFunc(pass)
 
   for k, v in pairs(nextbots) do
     local x, y, z = v.pos:unpack()
