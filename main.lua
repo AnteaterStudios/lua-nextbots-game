@@ -35,10 +35,10 @@ local doors = {
 }
 
 local nextbots = {
-  ['obunga'] = {image = "nextbots/obunga/obunga.jpg", sound = "", dsound = "", vel = 4, pos = lovr.math.newVec3(0, NB_SIZE / 2, 0), tex = nil, mat = nil, sLoop = false, timeJumping = -1},
-  ['baller'] = {image = "nextbots/baller/baller.jpeg", sound = "", dsound = "", vel = 6, pos = lovr.math.newVec3(0, NB_SIZE / 2, 0), tex = nil, mat = nil, sLoop = true, timeJumping = -1},
-  ['rock'] = {image = "nextbots/rock/rock.jpeg", sound = "nextbots/rock/death.mp3", dsound = "nextbots/rock/death.mp3", vel = 5, pos = lovr.math.newVec3(0, NB_SIZE / 2, 0), tex = nil, mat = nil, sLoop = false, timeJumping = -1},
-  ['spongebob'] = {image = "nextbots/bob/bob.jpeg", sound = "", dsound = "", vel = 5.5, pos = lovr.math.newVec3(0, NB_SIZE / 2, 0), tex = nil, mat = nil, sLoop = false, timeJumping = -1}
+  ['obunga'] = {image = "nextbots/obunga/obunga.jpg", sound = "", dsound = "", vel = 1.75, pos = lovr.math.newVec3(0, NB_SIZE / 2, 0), tex = nil, mat = nil, sLoop = false, timeJumping = -1},
+  ['baller'] = {image = "nextbots/baller/baller.jpeg", sound = "", dsound = "", vel = 2, pos = lovr.math.newVec3(0, NB_SIZE / 2, 0), tex = nil, mat = nil, sLoop = true, timeJumping = -1},
+  ['rock'] = {image = "nextbots/rock/rock.jpeg", sound = "nextbots/rock/death.mp3", dsound = "nextbots/rock/death.mp3", vel = 1.5, pos = lovr.math.newVec3(0, NB_SIZE / 2, 0), tex = nil, mat = nil, sLoop = false, timeJumping = -1},
+  ['spongebob'] = {image = "nextbots/bob/bob.jpeg", sound = "", dsound = "", vel = 1.25, pos = lovr.math.newVec3(0, NB_SIZE / 2, 0), tex = nil, mat = nil, sLoop = false, timeJumping = -1}
 }
 
 local function nbJump(duration, max_height, time)
